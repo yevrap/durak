@@ -27,21 +27,19 @@
                     this.value = value;
                     this.suit = suit;
                     this.id = `${value}${suit}`;
+                    // store location?
                 }
             }
 
-            const deckArray = [new Card(5, 1), new Card(5, 2), new Card(9, 1), new Card(9, 2)];
+            const deckArray = [new Card(5, 1), new Card(5, 2), new Card(9, 1), new Card(9, 2), new Card(2, 2)];
             const topHandArray = [];
             const bottomHandArray = [];
             const topBoardArray = [];
             const bottomBoardArray = [];
             const discardArray = [];
 
-            
-
             function draw(id) {
                 drawButtonId = document.getElementById(id).id;
-                
                 
                 if (drawButtonId === "topDraw") {
                     let topHandElement = document.getElementById("topHand");
@@ -55,6 +53,8 @@
                         newTopHandCard.type="button";
                         newTopHandCard.textContent = cardMovingToTopHand.value + " - " + cardMovingToTopHand.suit;
                         newTopHandCard.id=cardMovingToTopHand.id;
+                        newTopHandCard.setAttribute("value", cardMovingToTopHand.value);
+                        newTopHandCard.setAttribute("suit", cardMovingToTopHand.suit);
                         newTopHandCard.setAttribute("onClick","play(this.id);");
                         newTopHandCard.classList.add("top", "hand");
 
@@ -72,6 +72,8 @@
                         newBottomHandCard.type = "button";
                         newBottomHandCard.textContent = cardMovingToBottomHand.value + " - " + cardMovingToBottomHand.suit;
                         newBottomHandCard.id=cardMovingToBottomHand.id;
+                        newBottomHandCard.setAttribute("value", cardMovingToBottomHand.value);
+                        newBottomHandCard.setAttribute("suit", cardMovingToBottomHand.suit);
                         newBottomHandCard.setAttribute("onClick","play(this.id);");
                         newBottomHandCard.classList.add("bottom", "hand");
                         
@@ -84,78 +86,94 @@
             }
 
             function play(id) {
-                var card = document.getElementById(id);
+                let clickedCardElement = document.getElementById(id);
                 
+                let priorityElement = document.getElementById("priority");
+                let attackerElement = document.getElementById("attacker");
 
-                var priority = document.getElementById("priority");
-                var attacker = document.getElementById("attacker");
+                let whosPriority = priorityElement.getAttribute("value");
+                let whosAttacker = attackerElement.getAttribute("value");
 
-                if (!card.classList.contains(priority.getAttribute("value"))) {
+                let clickedCardValue = clickedCardElement.getAttribute("value");
+
+                // check priority
+                if (!clickedCardElement.classList.contains(whosPriority)) {
                     return 0;
                 }
 
-                // check if card can be played
-
-                // attacker can play any card if none on field
-                if (
-                    (
-                        card.classList.contains(attacker.getAttribute("value")) && // attacker
-                        topBoard.length === 0 // nothing on field
+                if ( // check if card can be played
+                    ( // attacker can play any card if none on field
+                        clickedCardElement.classList.contains(whosAttacker) && // attacker
+                        (topBoardArray.length === 0 && bottomBoardArray.length === 0) // nothing on field
                     )
                 
                 ||
 
-                    (
-                        !card.classList.contains(attacker.getAttribute("value")) && // card bottom defender
-                        card.id > topBoard[topBoard.length - 1]
+                    (// bottom defender can play card of a higher value and same suit
+                        whosPriority === "bottom" &&
+                        !clickedCardElement.classList.contains(whosAttacker) && 
+                        clickedCardValue > topBoardArray[topBoardArray.length - 1].value &&
+                        clickedCardElement.getAttribute("suit") === topBoardArray[topBoardArray.length - 1].suit
                     )
 
                 ||
 
-                    (
-                        !card.classList.contains(attacker.getAttribute("value")) && // card top defender
-                        card.id > bottomBoard[bottomBoard.length - 1]
+                    ( // top defender can play card of a higher value and same suit
+                        whosPriority === "top" &&
+                        !clickedCardElement.classList.contains(whosAttacker) &&
+                        clickedCardValue > bottomBoardArray[bottomBoardArray.length - 1].value &&
+                        clickedCardElement.getAttribute("suit") === bottomBoardArray[bottomBoardArray.length - 1].suit
+                    )
+
+                ||
+
+                    ( // bottom attacker can play card with same value
+                        clickedCardElement.classList.contains(whosAttacker) && // attacker
+                        bottomBoardArray.find(o => {
+                            return o.value === clickedCardValue;
+                        })
+                    )
+
+                ||
+
+                    ( // top attacker can play card with same value
+                        clickedCardElement.classList.contains(whosAttacker) && // attacker
+                        topBoardArray.find(o => {
+                            return o.value === clickedCardValue;
+                        })
                     )
                 ) {
-                    var field = document.getElementById(priority.getAttribute("value") + "Board");
+                    let fieldElement = document.getElementById(whosPriority + "Board");
 
-                    var newCard = document.createElement("BUTTON");
-                    newCard.type="button";
-                    newCard.textContent=card.id;
-                    newCard.id=card.id;
+                    let cardMovingToField = document.createElement("BUTTON");
+                    cardMovingToField.type = "button";
+                    cardMovingToField.textContent = clickedCardElement.value + " - " + clickedCardElement.getAttribute("suit");
+                    cardMovingToField.id = clickedCardElement.id;
+                    cardMovingToField.setAttribute("value", clickedCardElement.value);
+                    cardMovingToField.setAttribute("suit", clickedCardElement.getAttribute("suit"));
 
-                    newCard.classList.remove("hand");
-                    newCard.classList.add("field");
-                    newCard.classList.add(priority.getAttribute("value"));
+                    cardMovingToField.classList.remove("hand");
+                    cardMovingToField.classList.add("field");
+
+                    fieldElement.appendChild(cardMovingToField);
 
 
-                    field.appendChild(newCard);
+                    if (clickedCardElement.classList.contains("top")) {
+                        topBoardArray.push(new Card(clickedCardElement.value, clickedCardElement.getAttribute("suit")));
+                        topHandArray.splice(topHandArray.findIndex(o => o.id === clickedCardElement.id), 1);
 
-
-                    if (card.classList.contains("top")) {
-                        topBoard.push(card.id);
+                        priorityElement.setAttribute("value", "bottom");
+                        priorityElement.innerText = "Priority: Bottom";
                         
-                        var index = topHand.indexOf(card.id);
-                        topHand.splice(index, 1);
+                    } else if (clickedCardElement.classList.contains("bottom")) {
+                        bottomBoardArray.push(new Card(clickedCardElement.value, clickedCardElement.getAttribute("suit")));
+                        bottomHandArray.splice(bottomHandArray.findIndex(o => o.id === clickedCardElement.id), 1);
 
-                        newCard.classList.add("top");
-
-                        priority.setAttribute("value", "bottom");
-                        priority.innerText = "Priority: Bottom";
-                        
-                    } else if (card.classList.contains("bottom")) {
-                        bottomBoard.push(card.id);
-
-                        var index = bottomHand.indexOf(card.id);
-                        bottomHand.splice(index, 1);
-
-                        newCard.classList.add("bottom");
-
-                        priority.setAttribute("value", "top");
-                        priority.innerText = "Priority: Top";
+                        priorityElement.setAttribute("value", "top");
+                        priorityElement.innerText = "Priority: Top";
                     }
 
-                    card.remove();
+                    clickedCardElement.remove();
                 }
             }
 
