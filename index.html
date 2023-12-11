@@ -21,47 +21,64 @@
         </style>
 
         <script>
-            deck = [5, 2, 6, 7, 4, 8, 3, 9, 1];
-            topHand = [];
-            bottomHand = [];
-            topBoard = [];
-            bottomBoard = [];
-            discard = [];
+            class Card {
+                id;
+                constructor(value, suit) {
+                    this.value = value;
+                    this.suit = suit;
+                    this.id = `${value}${suit}`;
+                }
+            }
+
+            const deckArray = [new Card(5, 1), new Card(5, 2), new Card(9, 1), new Card(9, 2)];
+            const topHandArray = [];
+            const bottomHandArray = [];
+            const topBoardArray = [];
+            const bottomBoardArray = [];
+            const discardArray = [];
+
+            
+
             function draw(id) {
-                var location = document.getElementById(id).id;
-                var hand;
-                if (location === "topDraw") {
-                    hand = document.getElementById("topHand");
-                    var currentHandSize = hand.children.length;
+                drawButtonId = document.getElementById(id).id;
                 
-                    if (currentHandSize < 6 && deck.length > 0) {
-                        var card = document.createElement("BUTTON");
-                        card.type="button";
-                        var movingcardId = deck.pop();
-                        card.textContent=movingcardId;
-                        card.id=movingcardId;
-                        card.setAttribute("onClick","play(this.id);");
-                        card.classList.add("top", "hand");
-                        topHand.push(movingcardId);
-                        hand.appendChild(card);
+                
+                if (drawButtonId === "topDraw") {
+                    let topHandElement = document.getElementById("topHand");
+                    let topHandSize = topHandElement.children.length;
+                
+                    if (topHandSize < 6 && deckArray.length > 0) {
+                        let cardMovingToTopHand = deckArray.pop();
+                        topHandArray.push(cardMovingToTopHand);
+
+                        let newTopHandCard = document.createElement("BUTTON");
+                        newTopHandCard.type="button";
+                        newTopHandCard.textContent = cardMovingToTopHand.value + " - " + cardMovingToTopHand.suit;
+                        newTopHandCard.id=cardMovingToTopHand.id;
+                        newTopHandCard.setAttribute("onClick","play(this.id);");
+                        newTopHandCard.classList.add("top", "hand");
+
+                        topHandElement.appendChild(newTopHandCard);
                     }
-                } else if (location === "bottomDraw") {
-                    hand = document.getElementById("bottomHand");
-                    var currentHandSize = hand.children.length;
+                } else if (drawButtonId === "bottomDraw") {
+                    let bottomHandElement = document.getElementById("bottomHand");
+                    let bottomHandSize = bottomHandElement.children.length;
                 
-                    if (currentHandSize < 6 && deck.length > 0) {
-                        var card = document.createElement("BUTTON");
-                        card.type="button";
-                        var movingcardId = deck.pop();
-                        card.textContent=movingcardId;
-                        card.id=movingcardId;
-                        card.setAttribute("onClick","play(this.id);");
-                        card.classList.add("bottom", "hand");
-                        bottomHand.push(card.textContent);
-                        hand.appendChild(card);
+                    if (bottomHandSize < 6 && deckArray.length > 0) {
+                        let cardMovingToBottomHand = deckArray.pop();
+                        bottomHandArray.push(cardMovingToBottomHand);
+
+                        let newBottomHandCard = document.createElement("BUTTON");
+                        newBottomHandCard.type = "button";
+                        newBottomHandCard.textContent = cardMovingToBottomHand.value + " - " + cardMovingToBottomHand.suit;
+                        newBottomHandCard.id=cardMovingToBottomHand.id;
+                        newBottomHandCard.setAttribute("onClick","play(this.id);");
+                        newBottomHandCard.classList.add("bottom", "hand");
+                        
+                        bottomHandElement.appendChild(newBottomHandCard);
                     }
                 } else {
-                    throw "Invalid id";
+                    throw "Invalid draw id";
                 }
                 return 0;
             }
