@@ -1,0 +1,315 @@
+<html>
+    <head>
+        <style>
+            button {
+                border: none;
+                color: black;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+            }
+
+            .text-center {
+                text-align: center;
+            
+            
+            }
+        </style>
+
+        <script>
+            deck = [5, 2, 6, 7, 4, 8, 3, 9, 1];
+            topHand = [];
+            bottomHand = [];
+            topBoard = [];
+            bottomBoard = [];
+            discard = [];
+            function draw(id) {
+                var location = document.getElementById(id).id;
+                var hand;
+                if (location === "topDraw") {
+                    hand = document.getElementById("topHand");
+                    var currentHandSize = hand.children.length;
+                
+                    if (currentHandSize < 6 && deck.length > 0) {
+                        var card = document.createElement("BUTTON");
+                        card.type="button";
+                        var movingcardId = deck.pop();
+                        card.textContent=movingcardId;
+                        card.id=movingcardId;
+                        card.setAttribute("onClick","play(this.id);");
+                        card.classList.add("top", "hand");
+                        topHand.push(movingcardId);
+                        hand.appendChild(card);
+                    }
+                } else if (location === "bottomDraw") {
+                    hand = document.getElementById("bottomHand");
+                    var currentHandSize = hand.children.length;
+                
+                    if (currentHandSize < 6 && deck.length > 0) {
+                        var card = document.createElement("BUTTON");
+                        card.type="button";
+                        var movingcardId = deck.pop();
+                        card.textContent=movingcardId;
+                        card.id=movingcardId;
+                        card.setAttribute("onClick","play(this.id);");
+                        card.classList.add("bottom", "hand");
+                        bottomHand.push(card.textContent);
+                        hand.appendChild(card);
+                    }
+                } else {
+                    throw "Invalid id";
+                }
+                return 0;
+            }
+
+            function play(id) {
+                var card = document.getElementById(id);
+                
+
+                var priority = document.getElementById("priority");
+                var attacker = document.getElementById("attacker");
+
+                if (!card.classList.contains(priority.getAttribute("value"))) {
+                    return 0;
+                }
+
+                // check if card can be played
+
+                // attacker can play any card if none on field
+                if (
+                    (
+                        card.classList.contains(attacker.getAttribute("value")) && // attacker
+                        topBoard.length === 0 // nothing on field
+                    )
+                
+                ||
+
+                    (
+                        !card.classList.contains(attacker.getAttribute("value")) && // card bottom defender
+                        card.id > topBoard[topBoard.length - 1]
+                    )
+
+                ||
+
+                    (
+                        !card.classList.contains(attacker.getAttribute("value")) && // card top defender
+                        card.id > bottomBoard[bottomBoard.length - 1]
+                    )
+                ) {
+                    var field = document.getElementById(priority.getAttribute("value") + "Board");
+
+                    var newCard = document.createElement("BUTTON");
+                    newCard.type="button";
+                    newCard.textContent=card.id;
+                    newCard.id=card.id;
+
+                    newCard.classList.remove("hand");
+                    newCard.classList.add("field");
+                    newCard.classList.add(priority.getAttribute("value"));
+
+
+                    field.appendChild(newCard);
+
+
+                    if (card.classList.contains("top")) {
+                        topBoard.push(card.id);
+                        
+                        var index = topHand.indexOf(card.id);
+                        topHand.splice(index, 1);
+
+                        newCard.classList.add("top");
+
+                        priority.setAttribute("value", "bottom");
+                        priority.innerText = "Priority: Bottom";
+                        
+                    } else if (card.classList.contains("bottom")) {
+                        bottomBoard.push(card.id);
+
+                        var index = bottomHand.indexOf(card.id);
+                        bottomHand.splice(index, 1);
+
+                        newCard.classList.add("bottom");
+
+                        priority.setAttribute("value", "top");
+                        priority.innerText = "Priority: Top";
+                    }
+
+                    card.remove();
+                }
+            }
+
+            function take(id) {
+                var takeButton = document.getElementById(id);
+                var attacker = document.getElementById("attacker").getAttribute("value");
+                var priority = document.getElementById("priority").getAttribute("value");
+                if (!takeButton.classList.contains(attacker) && takeButton.classList.contains(priority)) {
+                    // pop cards from field and put them in defenders hand, change priority
+                    if (takeButton.classList.contains("bottom")) {
+                        for (var i = 0; i < topBoard.length; i++) {
+                            var movingCard = topBoard.pop();
+                            var card = document.getElementById(movingCard);
+                            card.remove();
+
+                            bottomHand.push(movingCard);
+
+                            var newCard = document.createElement("BUTTON");
+                            newCard.type="button";
+                            newCard.textContent=movingCard;
+                            newCard.id=movingCard;
+                            newCard.classList.add("bottom", "hand");
+                            newCard.setAttribute("onClick","play(this.id);");
+
+                            bottomHandElement = document.getElementById("bottomHand");
+                            bottomHandElement.appendChild(newCard);
+                        }
+                        for (var i = 0; i < bottomBoard.length; i++) {
+                            var movingCard = bottomBoard.pop();
+                            var card = document.getElementById(movingCard);
+                            card.remove();
+
+                            bottomHand.push(movingCard);
+
+                            var newCard = document.createElement("BUTTON");
+                            newCard.type="button";
+                            newCard.textContent=movingCard;
+                            newCard.id=movingCard;
+                            newCard.classList.add("bottom", "hand");
+                            newCard.setAttribute("onClick","play(this.id);");
+
+                            bottomHandElement = document.getElementById("bottomHand");
+                            bottomHandElement.appendChild(newCard);
+                        }
+                        document.getElementById("priority").setAttribute("value", "top");
+                        document.getElementById("priority").innerText ="Priority: Top";
+
+                    } else if (takeButton.classList.contains("top")) {
+                        for (var i = 0; i < topBoard.length; i++) {
+                            var movingCard = topBoard.pop();
+                            var card = document.getElementById(movingCard);
+                            card.remove();
+
+                            topHand.push(movingCard);
+
+                            var newCard = document.createElement("BUTTON");
+                            newCard.type="button";
+                            newCard.textContent=movingCard;
+                            newCard.id=movingCard;
+                            newCard.classList.add("top", "hand");
+                            newCard.setAttribute("onClick","play(this.id);");
+
+                            topHandElement = document.getElementById("topHand");
+                            topHandElement.appendChild(newCard);
+                        }
+                        for (var i = 0; i < bottomBoard.length; i++) {
+                            var movingCard = bottomBoard.pop();
+                            var card = document.getElementById(movingCard);
+                            card.remove();
+
+                            topHand.push(movingCard);
+
+                            var newCard = document.createElement("BUTTON");
+                            newCard.type="button";
+                            newCard.textContent=movingCard;
+                            newCard.id=movingCard;
+                            newCard.classList.add("top", "hand");
+                            newCard.setAttribute("onClick","play(this.id);");
+
+                            topHandElement = document.getElementById("topHand");
+                            topHandElement.appendChild(newCard);
+                        }
+                        document.getElementById("priority").setAttribute("value", "bottom");
+                        document.getElementById("priority").innerText ="Priority: Bottom";
+                    }
+                } else {
+                    return 0;
+                }
+            }
+
+            function pass(id) {
+                //can only pass if attacker and field arrays have same length
+                // switch turn and priority
+                //remove field cards
+                var passButton = document.getElementById(id);
+                var priority = document.getElementById("priority").getAttribute("value");
+                var attacker = document.getElementById("attacker").getAttribute("value");
+                
+
+                if (
+                    passButton.classList.contains(priority) && 
+                    passButton.classList.contains(attacker) &&
+                    topBoard.length !== 0 &&
+                    topBoard.length === bottomBoard.length
+                    ) 
+                    {
+                        for (var i = 0; i < topBoard.length; i++) {
+                            var movingCard = document.getElementById(topBoard.pop());
+                            discard.push(movingCard.id);
+                            movingCard.remove();
+                        }
+                        for (var i = 0; i < bottomBoard.length; i++) {
+                            var movingCard = document.getElementById(bottomBoard.pop());
+                            discard.push(movingCard.id);
+                            movingCard.remove();
+                        }
+                        if (passButton.classList.contains("top")) {
+                            document.getElementById("priority").setAttribute("value", "bottom");
+                            document.getElementById("priority").innerText="Priority: Bottom";
+                            document.getElementById("attacker").setAttribute("value", "bottom");
+                            document.getElementById("attacker").innerText="Attacker: Bottom";
+                        } else if (passButton.classList.contains("bottom")) {
+                            document.getElementById("priority").setAttribute("value", "top");
+                            document.getElementById("priority").innerText="Priority: Top";
+                            document.getElementById("attacker").setAttribute("value", "top");
+                            document.getElementById("attacker").innerText="Attacker: Top";
+                        }
+                }
+
+            }
+    </script>
+    </head>
+
+    <body>
+        <h2 id="attacker" value="bottom">Attacker: Bottom</h2>
+        <h2 id="priority" value="bottom">Priority: Bottom</h2>
+        <div class="text-center">
+            <br>
+
+            <div id="topOptions">
+                <button id="topDraw" class="top draw" type="button" onclick="draw(this.id)">Draw</button>
+                <button id="topTake" class="top take" type="button" onclick="take(this.id)">Take</button>
+                <button id="topPass" class="top pass" type="button" onclick="pass(this.id)">Pass</button>
+            </div>
+            <div id="topHand">
+
+            </div>
+            <br>
+
+            <div id="topBoard">
+            
+            </div>
+
+            <br>
+    
+            <div id="bottomBoard">
+            
+            </div>
+
+            <br>
+
+            <div id="bottomHand">
+                
+            </div>
+
+            <div id="bottomOptions">
+                <button id="bottomDraw" class="bottom draw" type="button" onclick="draw(this.id)">Draw</button>
+                <button id="bottomTake" class="bottom take" type="button" onclick="take(this.id)">Take</button>
+                <button id="bottomPass" class="bottom pass" type="button" onclick="pass(this.id)">Pass</button>
+            </div>
+        </div>
+        
+    </body>
+</html>
