@@ -86,6 +86,7 @@
             }
 
             function play(id) {
+                let specialSuit = "4";
                 let clickedCardElement = document.getElementById(id);
                 
                 let priorityElement = document.getElementById("priority");
@@ -123,6 +124,24 @@
                         !clickedCardElement.classList.contains(whosAttacker) &&
                         clickedCardValue > bottomBoardArray[bottomBoardArray.length - 1].value &&
                         clickedCardElement.getAttribute("suit") === bottomBoardArray[bottomBoardArray.length - 1].suit
+                    )
+
+                ||
+                    
+                    (// bottom defender can play card of different special suit
+                        whosPriority === "bottom" &&
+                        !clickedCardElement.classList.contains(whosAttacker) && 
+                        clickedCardElement.getAttribute("suit") !== topBoardArray[topBoardArray.length - 1].suit &&
+                        clickedCardElement.getAttribute("suit") === specialSuit
+                    )
+
+                ||
+
+                    ( // top defender can play card of different special suit
+                        whosPriority === "top" &&
+                        !clickedCardElement.classList.contains(whosAttacker) &&
+                        clickedCardElement.getAttribute("suit") !== bottomBoardArray[bottomBoardArray.length - 1].suit &&
+                        clickedCardElement.getAttribute("suit") === specialSuit
                     )
 
                 ||
@@ -184,7 +203,7 @@
                 if (!takeButtonElement.classList.contains(whosAttacker) && takeButtonElement.classList.contains(whosPriority)) {
                     // pop cards from field and put them in defenders hand, change priority
                     if (takeButtonElement.classList.contains("bottom")) {
-                        for (let i = 0; i < topBoardArray.length; i++) {
+                        while (topBoardArray.length > 0) {
                             let movingCardObject = topBoardArray.pop();
                             let movingCardElement = document.getElementById(movingCardObject.id);
                             movingCardElement.remove();
@@ -203,7 +222,7 @@
                             bottomHandElement = document.getElementById("bottomHand");
                             bottomHandElement.appendChild(newCardElement);
                         }
-                        for (let j = 0; j < bottomBoardArray.length; j++) {
+                        while (bottomBoardArray.length > 0) {
                             let movingCardObject = bottomBoardArray.pop();
                             let movingCardElement = document.getElementById(movingCardObject.id);
                             movingCardElement.remove();
@@ -226,7 +245,7 @@
                         document.getElementById("priority").innerText = "Priority: Top";
 
                     } else if (takeButtonElement.classList.contains("top")) {
-                        for (let k = 0; k < topBoardArray.length; k++) {
+                        while (topBoardArray.length > 0) {
                             let movingCardObject = topBoardArray.pop();
                             let movingCardElement = document.getElementById(movingCardObject.id);
                             movingCardElement.remove();
@@ -245,7 +264,7 @@
                             topHandElement = document.getElementById("topHand");
                             topHandElement.appendChild(newCardElement);
                         }
-                        for (let l = 0; l < bottomBoardArray.length; l++) {
+                        while (bottomBoardArray.length > 0) {
                             let movingCardObject = bottomBoardArray.pop();
                             let movingCardElement = document.getElementById(movingCardObject.id);
                             movingCardElement.remove();
