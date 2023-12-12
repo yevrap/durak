@@ -31,7 +31,44 @@
                 }
             }
 
-            const deckArray = [new Card(1, 1), new Card(9, 1), new Card(1, 2), new Card(9, 2), new Card(1, 3), new Card(9, 3), new Card(1, 4), new Card(9, 4)];
+            const deckArray = [
+                new Card(6, 1),
+                new Card(8, 3),
+                new Card(13, 1),
+                new Card(10, 2),
+                new Card(8, 1),
+                new Card(12, 3),
+                new Card(8, 2),
+                new Card(7, 3),
+                new Card(12, 4),
+                new Card(13, 3),
+                new Card(8, 4),
+                new Card(9, 1),
+                new Card(7, 1),
+                new Card(11, 4),
+                new Card(14, 3),
+                new Card(11, 2),
+                new Card(11, 3),
+                new Card(6, 4),
+                new Card(6, 2),
+                new Card(10, 1),
+                new Card(9, 4),
+                new Card(14, 1),
+                new Card(7, 4),
+                new Card(7, 2),
+                new Card(12, 1),
+                new Card(10, 3),
+                new Card(13, 2),
+                new Card(9, 3),
+                new Card(13, 4),
+                new Card(6, 3),
+                new Card(10, 4),
+                new Card(14, 4), 
+                new Card(11, 1),
+                new Card(12, 2),
+                new Card(14, 2),
+                new Card(9, 2),
+            ];
             const topHandArray = [];
             const bottomHandArray = [];
             const topBoardArray = [];
@@ -95,7 +132,7 @@
                 let whosPriority = priorityElement.getAttribute("value");
                 let whosAttacker = attackerElement.getAttribute("value");
 
-                let clickedCardValue = clickedCardElement.getAttribute("value");
+                let clickedCardValue = parseInt(clickedCardElement.getAttribute("value"));
 
                 // check priority
                 if (!clickedCardElement.classList.contains(whosPriority)) {
@@ -149,7 +186,7 @@
                     ( // bottom attacker can play card with same value
                         clickedCardElement.classList.contains(whosAttacker) && // attacker
                         bottomBoardArray.find(o => {
-                            return o.value === clickedCardValue;
+                            return parseInt(o.value) === clickedCardValue;
                         })
                     )
 
@@ -158,7 +195,7 @@
                     ( // top attacker can play card with same value
                         clickedCardElement.classList.contains(whosAttacker) && // attacker
                         topBoardArray.find(o => {
-                            return o.value === clickedCardValue;
+                            return parseInt(o.value) === clickedCardValue;
                         })
                     )
                 ) {
