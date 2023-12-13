@@ -83,11 +83,11 @@
                     let topHandSize = topHandElement.children.length;
                 
                     if (topHandSize < 6 && deckArray.length > 0) {
-                        let cardMovingToTopHand = deckArray.pop();
-                        topHandArray.push(cardMovingToTopHand);
+                        let movingCardObject = deckArray.pop();
+                        topHandArray.push(movingCardObject);
 
                         let movingCardSuitEmoji;
-                        switch (cardMovingToTopHand.suit) {
+                        switch (movingCardObject.suit) {
                             case 1:
                                 // spade
                                 movingCardSuitEmoji = String.fromCodePoint(0x2660)
@@ -107,7 +107,7 @@
                         }
 
                         let movingCardDisplay;
-                        switch (cardMovingToTopHand.value) {
+                        switch (movingCardObject.value) {
                             case 11:
                                 movingCardDisplay = "J";
                                 break;
@@ -121,31 +121,30 @@
                                 movingCardDisplay = "A";
                                 break;
                             default:
-                            movingCardDisplay = cardMovingToTopHand.value;
+                            movingCardDisplay = movingCardObject.value;
                         }
                         
+                        let newCardElement = document.createElement("BUTTON");
+                        newCardElement.type="button";
+                        newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                        newCardElement.id = movingCardObject.id;
+                        newCardElement.setAttribute("value", movingCardObject.value);
+                        newCardElement.setAttribute("suit", movingCardObject.suit);
+                        newCardElement.setAttribute("onClick","play(this.id);");
+                        newCardElement.classList.add("top", "hand");
 
-                        let newTopHandCard = document.createElement("BUTTON");
-                        newTopHandCard.type="button";
-                        newTopHandCard.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
-                        newTopHandCard.id=cardMovingToTopHand.id;
-                        newTopHandCard.setAttribute("value", cardMovingToTopHand.value);
-                        newTopHandCard.setAttribute("suit", cardMovingToTopHand.suit);
-                        newTopHandCard.setAttribute("onClick","play(this.id);");
-                        newTopHandCard.classList.add("top", "hand");
-
-                        topHandElement.appendChild(newTopHandCard);
+                        topHandElement.appendChild(newCardElement);
                     }
                 } else if (drawButtonId === "bottomDraw") {
                     let bottomHandElement = document.getElementById("bottomHand");
                     let bottomHandSize = bottomHandElement.children.length;
                 
                     if (bottomHandSize < 6 && deckArray.length > 0) {
-                        let cardMovingToBottomHand = deckArray.pop();
-                        bottomHandArray.push(cardMovingToBottomHand);
+                        let movingCardObject = deckArray.pop();
+                        bottomHandArray.push(movingCardObject);
 
                         let movingCardSuitEmoji;
-                        switch (cardMovingToBottomHand.suit) {
+                        switch (movingCardObject.suit) {
                             case 1:
                                 // spade
                                 movingCardSuitEmoji = String.fromCodePoint(0x2660)
@@ -165,7 +164,7 @@
                         }
 
                         let movingCardDisplay;
-                        switch (cardMovingToBottomHand.value) {
+                        switch (movingCardObject.value) {
                             case 11:
                                 movingCardDisplay = "J";
                                 break;
@@ -179,19 +178,19 @@
                                 movingCardDisplay = "A";
                                 break;
                             default:
-                            movingCardDisplay = cardMovingToBottomHand.value;
+                            movingCardDisplay = movingCardObject.value;
                         }
 
-                        let newBottomHandCard = document.createElement("BUTTON");
-                        newBottomHandCard.type = "button";
-                        newBottomHandCard.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
-                        newBottomHandCard.id=cardMovingToBottomHand.id;
-                        newBottomHandCard.setAttribute("value", cardMovingToBottomHand.value);
-                        newBottomHandCard.setAttribute("suit", cardMovingToBottomHand.suit);
-                        newBottomHandCard.setAttribute("onClick","play(this.id);");
-                        newBottomHandCard.classList.add("bottom", "hand");
+                        let newCardElement = document.createElement("BUTTON");
+                        newCardElement.type = "button";
+                        newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                        newCardElement.id=movingCardObject.id;
+                        newCardElement.setAttribute("value", movingCardObject.value);
+                        newCardElement.setAttribute("suit", movingCardObject.suit);
+                        newCardElement.setAttribute("onClick","play(this.id);");
+                        newCardElement.classList.add("bottom", "hand");
                         
-                        bottomHandElement.appendChild(newBottomHandCard);
+                        bottomHandElement.appendChild(newCardElement);
                     }
                 } else {
                     throw "Invalid draw id";
@@ -200,7 +199,7 @@
             }
 
             function play(id) {
-                let specialSuit = "4";
+                let specialSuit = 4;
                 let clickedCardElement = document.getElementById(id);
                 
                 let priorityElement = document.getElementById("priority");
@@ -266,8 +265,8 @@
                     (// bottom defender can play card of a higher value and same suit
                         whosPriority === "bottom" &&
                         !clickedCardElement.classList.contains(whosAttacker) && 
-                        clickedCardValue > topBoardArray[topBoardArray.length - 1].value &&
-                        clickedCardElement.getAttribute("suit") === topBoardArray[topBoardArray.length - 1].suit
+                        clickedCardValue > parseInt(topBoardArray[topBoardArray.length - 1].value) &&
+                        clickedCardSuitId === parseInt(topBoardArray[topBoardArray.length - 1].suit)
                     )
 
                 ||
@@ -275,8 +274,8 @@
                     ( // top defender can play card of a higher value and same suit
                         whosPriority === "top" &&
                         !clickedCardElement.classList.contains(whosAttacker) &&
-                        clickedCardValue > bottomBoardArray[bottomBoardArray.length - 1].value &&
-                        clickedCardSuitId === bottomBoardArray[bottomBoardArray.length - 1].suit
+                        clickedCardValue > parseInt(bottomBoardArray[bottomBoardArray.length - 1].value) &&
+                        clickedCardSuitId === parseInt(bottomBoardArray[bottomBoardArray.length - 1].suit)
                     )
 
                 ||
@@ -284,7 +283,7 @@
                     (// bottom defender can play card of different special suit
                         whosPriority === "bottom" &&
                         !clickedCardElement.classList.contains(whosAttacker) && 
-                        clickedCardSuitId !== topBoardArray[topBoardArray.length - 1].suit &&
+                        clickedCardSuitId !== parseInt(topBoardArray[topBoardArray.length - 1].suit) &&
                         clickedCardSuitId === specialSuit
                     )
 
@@ -293,7 +292,7 @@
                     ( // top defender can play card of different special suit
                         whosPriority === "top" &&
                         !clickedCardElement.classList.contains(whosAttacker) &&
-                        clickedCardSuitId !== bottomBoardArray[bottomBoardArray.length - 1].suit &&
+                        clickedCardSuitId !== parseInt(bottomBoardArray[bottomBoardArray.length - 1].suit) &&
                         clickedCardSuitId === specialSuit
                     )
 
@@ -358,14 +357,55 @@
                     if (takeButtonElement.classList.contains("bottom")) {
                         while (topBoardArray.length > 0) {
                             let movingCardObject = topBoardArray.pop();
+                            let movingCardSuitId = parseInt(movingCardObject.suit);
+                            let movingCardValue = parseInt(movingCardObject.value);
+
                             let movingCardElement = document.getElementById(movingCardObject.id);
                             movingCardElement.remove();
 
                             bottomHandArray.push(movingCardObject);
 
+                            let movingCardSuitEmoji;
+                            switch (movingCardSuitId) {
+                                case 1:
+                                    // spade
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2660)
+                                    break;
+                                case 2:
+                                    // club
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2663)
+                                    break;
+                                case 3:
+                                    // diamond
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2666)
+                                    break;
+                                case 4:
+                                    // hearts
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2764)
+                                    break;
+                            }
+
+                            let movingCardDisplay;
+                            switch (movingCardValue) {
+                                case 11:
+                                    movingCardDisplay = "J";
+                                    break;
+                                case 12:
+                                    movingCardDisplay = "Q";
+                                    break;
+                                case 13:
+                                    movingCardDisplay = "K";
+                                    break;
+                                case 14:
+                                    movingCardDisplay = "A";
+                                    break;
+                                default:
+                                    movingCardDisplay = movingCardObject.value;
+                            }
+
                             let newCardElement = document.createElement("BUTTON");
                             newCardElement.type = "button";
-                            newCardElement.textContent = movingCardObject.value + " - " + movingCardObject.suit;
+                            newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
                             newCardElement.id = movingCardObject.id;
                             newCardElement.classList.add("bottom", "hand");
                             newCardElement.setAttribute("value", movingCardObject.value);
@@ -377,14 +417,55 @@
                         }
                         while (bottomBoardArray.length > 0) {
                             let movingCardObject = bottomBoardArray.pop();
+                            let movingCardSuitId = parseInt(movingCardObject.suit);
+                            let movingCardValue = parseInt(movingCardObject.value);
+
                             let movingCardElement = document.getElementById(movingCardObject.id);
                             movingCardElement.remove();
 
                             bottomHandArray.push(movingCardObject);
 
+                            let movingCardSuitEmoji;
+                            switch (movingCardSuitId) {
+                                case 1:
+                                    // spade
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2660)
+                                    break;
+                                case 2:
+                                    // club
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2663)
+                                    break;
+                                case 3:
+                                    // diamond
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2666)
+                                    break;
+                                case 4:
+                                    // hearts
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2764)
+                                    break;
+                            }
+
+                            let movingCardDisplay;
+                            switch (movingCardValue) {
+                                case 11:
+                                    movingCardDisplay = "J";
+                                    break;
+                                case 12:
+                                    movingCardDisplay = "Q";
+                                    break;
+                                case 13:
+                                    movingCardDisplay = "K";
+                                    break;
+                                case 14:
+                                    movingCardDisplay = "A";
+                                    break;
+                                default:
+                                    movingCardDisplay = movingCardValue;
+                            }
+
                             let newCardElement = document.createElement("BUTTON");
                             newCardElement.type = "button";
-                            newCardElement.textContent = movingCardObject.value + " - " + movingCardObject.suit;
+                            newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
                             newCardElement.id = movingCardObject.id;
                             newCardElement.classList.add("bottom", "hand");
                             newCardElement.setAttribute("value", movingCardObject.value);
@@ -400,14 +481,55 @@
                     } else if (takeButtonElement.classList.contains("top")) {
                         while (topBoardArray.length > 0) {
                             let movingCardObject = topBoardArray.pop();
+                            let movingCardSuitId = parseInt(movingCardObject.suit);
+                            let movingCardValue = parseInt(movingCardObject.value);
+
                             let movingCardElement = document.getElementById(movingCardObject.id);
                             movingCardElement.remove();
 
                             topHandArray.push(movingCardObject);
 
+                            let movingCardSuitEmoji;
+                            switch (movingCardSuitId) {
+                                case 1:
+                                    // spade
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2660)
+                                    break;
+                                case 2:
+                                    // club
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2663)
+                                    break;
+                                case 3:
+                                    // diamond
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2666)
+                                    break;
+                                case 4:
+                                    // hearts
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2764)
+                                    break;
+                            }
+
+                            let movingCardDisplay;
+                            switch (movingCardValue) {
+                                case 11:
+                                    movingCardDisplay = "J";
+                                    break;
+                                case 12:
+                                    movingCardDisplay = "Q";
+                                    break;
+                                case 13:
+                                    movingCardDisplay = "K";
+                                    break;
+                                case 14:
+                                    movingCardDisplay = "A";
+                                    break;
+                                default:
+                                    movingCardDisplay = movingCardValue;
+                            }
+
                             let newCardElement = document.createElement("BUTTON");
                             newCardElement.type = "button";
-                            newCardElement.textContent = movingCardObject.value + " - " + movingCardObject.suit;
+                            newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
                             newCardElement.id = movingCardObject.id;
                             newCardElement.classList.add("top", "hand");
                             newCardElement.setAttribute("value", movingCardObject.value);
@@ -419,14 +541,55 @@
                         }
                         while (bottomBoardArray.length > 0) {
                             let movingCardObject = bottomBoardArray.pop();
+                            let movingCardSuitId = parseInt(movingCardObject.suit);
+                            let movingCardValue = parseInt(movingCardObject.value);
+
                             let movingCardElement = document.getElementById(movingCardObject.id);
                             movingCardElement.remove();
 
                             topHandArray.push(movingCardObject);
 
+                            let movingCardSuitEmoji;
+                            switch (movingCardSuitId) {
+                                case 1:
+                                    // spade
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2660)
+                                    break;
+                                case 2:
+                                    // club
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2663)
+                                    break;
+                                case 3:
+                                    // diamond
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2666)
+                                    break;
+                                case 4:
+                                    // hearts
+                                    movingCardSuitEmoji = String.fromCodePoint(0x2764)
+                                    break;
+                            }
+
+                            let movingCardDisplay;
+                            switch (movingCardValue) {
+                                case 11:
+                                    movingCardDisplay = "J";
+                                    break;
+                                case 12:
+                                    movingCardDisplay = "Q";
+                                    break;
+                                case 13:
+                                    movingCardDisplay = "K";
+                                    break;
+                                case 14:
+                                    movingCardDisplay = "A";
+                                    break;
+                                default:
+                                    movingCardDisplay = movingCardValue;
+                            }
+
                             let newCardElement = document.createElement("BUTTON");
                             newCardElement.type = "button";
-                            newCardElement.textContent = movingCardObject.value + " - " + movingCardObject.suit;
+                            newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
                             newCardElement.id = movingCardObject.id;
                             newCardElement.classList.add("top", "hand");
                             newCardElement.setAttribute("value", movingCardObject.value);
