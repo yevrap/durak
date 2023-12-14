@@ -36,7 +36,6 @@
                 new Card(8, 3),
                 new Card(13, 1),
                 new Card(10, 2),
-                new Card(8, 1),
                 new Card(12, 3),
                 new Card(8, 2),
                 new Card(7, 3),
@@ -44,15 +43,18 @@
                 new Card(13, 3),
                 new Card(8, 4),
                 new Card(9, 1),
+                new Card(8, 1),
                 new Card(7, 1),
                 new Card(11, 4),
                 new Card(14, 3),
+                new Card(14, 2),
                 new Card(11, 2),
                 new Card(11, 3),
                 new Card(6, 4),
                 new Card(6, 2),
                 new Card(10, 1),
                 new Card(9, 4),
+                new Card(6, 3),
                 new Card(14, 1),
                 new Card(7, 4),
                 new Card(7, 2),
@@ -61,12 +63,10 @@
                 new Card(13, 2),
                 new Card(9, 3),
                 new Card(13, 4),
-                new Card(6, 3),
                 new Card(10, 4),
                 new Card(14, 4), 
                 new Card(11, 1),
                 new Card(12, 2),
-                new Card(14, 2),
                 new Card(9, 2),
             ];
             const topHandArray = [];
@@ -75,19 +75,21 @@
             const bottomBoardArray = [];
             const discardArray = [];
 
-            function draw(id) {
-                drawButtonId = document.getElementById(id).id;
-                
-                if (drawButtonId === "topDraw") {
+            function draw(first)
+            {
+                if (first.classList.contains("top")) 
+                {
+
                     let topHandElement = document.getElementById("topHand");
-                    let topHandSize = topHandElement.children.length;
-                
-                    if (topHandSize < 6 && deckArray.length > 0) {
+            
+                    while (topHandElement.children.length < 6 && deckArray.length > 0) 
+                    {
                         let movingCardObject = deckArray.pop();
                         topHandArray.push(movingCardObject);
 
                         let movingCardSuitEmoji;
-                        switch (movingCardObject.suit) {
+                        switch (movingCardObject.suit) 
+                        {
                             case 1:
                                 // spade
                                 movingCardSuitEmoji = String.fromCodePoint(0x2660)
@@ -107,7 +109,8 @@
                         }
 
                         let movingCardDisplay;
-                        switch (movingCardObject.value) {
+                        switch (movingCardObject.value) 
+                        {
                             case 11:
                                 movingCardDisplay = "J";
                                 break;
@@ -121,9 +124,9 @@
                                 movingCardDisplay = "A";
                                 break;
                             default:
-                            movingCardDisplay = movingCardObject.value;
+                                movingCardDisplay = movingCardObject.value;
                         }
-                        
+                    
                         let newCardElement = document.createElement("BUTTON");
                         newCardElement.type="button";
                         newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
@@ -135,16 +138,17 @@
 
                         topHandElement.appendChild(newCardElement);
                     }
-                } else if (drawButtonId === "bottomDraw") {
-                    let bottomHandElement = document.getElementById("bottomHand");
-                    let bottomHandSize = bottomHandElement.children.length;
                 
-                    if (bottomHandSize < 6 && deckArray.length > 0) {
+                    let bottomHandElement = document.getElementById("bottomHand");
+            
+                    while (bottomHandElement.children.length < 6 && deckArray.length > 0) 
+                    {
                         let movingCardObject = deckArray.pop();
                         bottomHandArray.push(movingCardObject);
 
                         let movingCardSuitEmoji;
-                        switch (movingCardObject.suit) {
+                        switch (movingCardObject.suit) 
+                        {
                             case 1:
                                 // spade
                                 movingCardSuitEmoji = String.fromCodePoint(0x2660)
@@ -164,7 +168,8 @@
                         }
 
                         let movingCardDisplay;
-                        switch (movingCardObject.value) {
+                        switch (movingCardObject.value) 
+                        {
                             case 11:
                                 movingCardDisplay = "J";
                                 break;
@@ -192,10 +197,129 @@
                         
                         bottomHandElement.appendChild(newCardElement);
                     }
-                } else {
-                    throw "Invalid draw id";
-                }
-                return 0;
+                } 
+                else if (first.classList.contains("bottom")) 
+                {
+                    let bottomHandElement = document.getElementById("bottomHand");
+                    while (bottomHandElement.children.length < 6 && deckArray.length > 0) 
+                    {
+                        let movingCardObject = deckArray.pop();
+                        bottomHandArray.push(movingCardObject);
+
+                        let movingCardSuitEmoji;
+                        switch (movingCardObject.suit) 
+                        {
+                            case 1:
+                                // spade
+                                movingCardSuitEmoji = String.fromCodePoint(0x2660)
+                                break;
+                            case 2:
+                                // club
+                                movingCardSuitEmoji = String.fromCodePoint(0x2663)
+                                break;
+                            case 3:
+                                // diamond
+                                movingCardSuitEmoji = String.fromCodePoint(0x2666)
+                                break;
+                            case 4:
+                                // hearts
+                                movingCardSuitEmoji = String.fromCodePoint(0x2764)
+                                break;
+                        }
+
+                        let movingCardDisplay;
+                        switch (movingCardObject.value) 
+                        {
+                            case 11:
+                                movingCardDisplay = "J";
+                                break;
+                            case 12:
+                                movingCardDisplay = "Q";
+                                break;
+                            case 13:
+                                movingCardDisplay = "K";
+                                break;
+                            case 14:
+                                movingCardDisplay = "A";
+                                break;
+                            default:
+                            movingCardDisplay = movingCardObject.value;
+                        }
+
+                        let newCardElement = document.createElement("BUTTON");
+                        newCardElement.type = "button";
+                        newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                        newCardElement.id=movingCardObject.id;
+                        newCardElement.setAttribute("value", movingCardObject.value);
+                        newCardElement.setAttribute("suit", movingCardObject.suit);
+                        newCardElement.setAttribute("onClick","play(this.id);");
+                        newCardElement.classList.add("bottom", "hand");
+                        
+                        bottomHandElement.appendChild(newCardElement);
+                    }
+                    let topHandElement = document.getElementById("topHand");
+                    while (topHandElement.children.length < 6 && deckArray.length > 0) 
+                    {
+                        let movingCardObject = deckArray.pop();
+                        topHandArray.push(movingCardObject);
+
+                        let movingCardSuitEmoji;
+                        switch (movingCardObject.suit) 
+                        {
+                            case 1:
+                                // spade
+                                movingCardSuitEmoji = String.fromCodePoint(0x2660)
+                                break;
+                            case 2:
+                                // club
+                                movingCardSuitEmoji = String.fromCodePoint(0x2663)
+                                break;
+                            case 3:
+                                // diamond
+                                movingCardSuitEmoji = String.fromCodePoint(0x2666)
+                                break;
+                            case 4:
+                                // hearts
+                                movingCardSuitEmoji = String.fromCodePoint(0x2764)
+                                break;
+                        }
+
+                        let movingCardDisplay;
+                        switch (movingCardObject.value) 
+                        {
+                            case 11:
+                                movingCardDisplay = "J";
+                                break;
+                            case 12:
+                                movingCardDisplay = "Q";
+                                break;
+                            case 13:
+                                movingCardDisplay = "K";
+                                break;
+                            case 14:
+                                movingCardDisplay = "A";
+                                break;
+                            default:
+                                movingCardDisplay = movingCardObject.value;
+                        }
+                    
+                        let newCardElement = document.createElement("BUTTON");
+                        newCardElement.type="button";
+                        newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                        newCardElement.id = movingCardObject.id;
+                        newCardElement.setAttribute("value", movingCardObject.value);
+                        newCardElement.setAttribute("suit", movingCardObject.suit);
+                        newCardElement.setAttribute("onClick","play(this.id);");
+                        newCardElement.classList.add("top", "hand");
+
+                        topHandElement.appendChild(newCardElement);
+                    }
+                } 
+
+                if (document.contains(document.getElementById("bottomDraw"))) 
+                {
+                    document.getElementById("bottomDraw").remove();
+                }      
             }
 
             function play(id) {
@@ -345,6 +469,16 @@
                     }
 
                     clickedCardElement.remove();
+
+                    if (clickedCardElement.classList.contains("bottom")) 
+                    {
+                        let topHandElements = document.getElementById("topHand").children;
+                        for (let i = 0; i < topHandElements.length; i++) {
+                            topHandElements[i].click();
+                        }
+                        document.getElementById("topTake").click();
+                        document.getElementById("topPass").click();
+                    }
                 }
             }
 
@@ -478,6 +612,10 @@
                         document.getElementById("priority").setAttribute("value", "top");
                         document.getElementById("priority").innerText = "Priority: Top";
 
+                        if (document.getElementById("bottomHand").children.length > 0) {
+                            document.getElementById("topHand").children[1].click();
+                        }
+
                     } else if (takeButtonElement.classList.contains("top")) {
                         while (topBoardArray.length > 0) {
                             let movingCardObject = topBoardArray.pop();
@@ -607,6 +745,7 @@
                 } else {
                     return 0;
                 }
+                draw(takeButtonElement); // not right order but shouldn't matter
             }
 
             function pass(id) {
@@ -624,32 +763,40 @@
                     topBoardArray.length !== 0 && // if there is more than one card on the field
                     topBoardArray.length === bottomBoardArray.length // if every card has been defended
                     ) 
+                {
+                    while (topBoardArray.length > 0) 
                     {
-                        while (topBoardArray.length > 0) {
-                            let movingCardObject = topBoardArray.pop();
-                            let movingCardElement = document.getElementById(movingCardObject.id);
-                            discardArray.push(movingCardObject);
-                            movingCardElement.remove();
-                        }
-                        while(bottomBoardArray.length > 0) {
-                            let movingCardObject = bottomBoardArray.pop();
-                            let movingCardElement = document.getElementById(movingCardObject.id);
-                            discardArray.push(movingCardObject);
-                            movingCardElement.remove();
-                        }
-                        if (passButtonElement.classList.contains("top")) {
-                            document.getElementById("priority").setAttribute("value", "bottom");
-                            document.getElementById("priority").innerText="Priority: Bottom";
-                            document.getElementById("attacker").setAttribute("value", "bottom");
-                            document.getElementById("attacker").innerText="Attacker: Bottom";
-                        } else if (passButtonElement.classList.contains("bottom")) {
-                            document.getElementById("priority").setAttribute("value", "top");
-                            document.getElementById("priority").innerText="Priority: Top";
-                            document.getElementById("attacker").setAttribute("value", "top");
-                            document.getElementById("attacker").innerText="Attacker: Top";
-                        }
-                }
+                        let movingCardObject = topBoardArray.pop();
+                        let movingCardElement = document.getElementById(movingCardObject.id);
+                        discardArray.push(movingCardObject);
+                        movingCardElement.remove();
+                    }
+                    while(bottomBoardArray.length > 0) 
+                    {
+                        let movingCardObject = bottomBoardArray.pop();
+                        let movingCardElement = document.getElementById(movingCardObject.id);
+                        discardArray.push(movingCardObject);
+                        movingCardElement.remove();
+                    }
+                    if (passButtonElement.classList.contains("top")) 
+                    {
+                        document.getElementById("priority").setAttribute("value", "bottom");
+                        document.getElementById("priority").innerText="Priority: Bottom";
+                        document.getElementById("attacker").setAttribute("value", "bottom");
+                        document.getElementById("attacker").innerText="Attacker: Bottom";
+                    } else if (passButtonElement.classList.contains("bottom")) 
+                    {
+                        document.getElementById("priority").setAttribute("value", "top");
+                        document.getElementById("priority").innerText="Priority: Top";
+                        document.getElementById("attacker").setAttribute("value", "top");
+                        document.getElementById("attacker").innerText="Attacker: Top";
 
+                        if (document.getElementById("bottomHand").children.length > 0) {
+                            document.getElementById("topHand").children[1].click();
+                        }
+                    }
+                    draw(passButtonElement);
+                }
             }
     </script>
     </head>
@@ -661,7 +808,6 @@
             <br>
 
             <div id="topOptions">
-                <button id="topDraw" class="top draw" type="button" onclick="draw(this.id)">Draw</button>
                 <button id="topTake" class="top take" type="button" onclick="take(this.id)">Take</button>
                 <button id="topPass" class="top pass" type="button" onclick="pass(this.id)">Pass</button>
             </div>
@@ -687,7 +833,7 @@
             </div>
 
             <div id="bottomOptions">
-                <button id="bottomDraw" class="bottom draw" type="button" onclick="draw(this.id)">Draw</button>
+                <button id="bottomDraw" class="bottom draw" type="button" onclick="draw(this)">Draw</button>
                 <button id="bottomTake" class="bottom take" type="button" onclick="take(this.id)">Take</button>
                 <button id="bottomPass" class="bottom pass" type="button" onclick="pass(this.id)">Pass</button>
             </div>
