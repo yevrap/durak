@@ -472,10 +472,15 @@
 
                     if (clickedCardElement.classList.contains("bottom")) 
                     {
-                        let topHandElements = document.getElementById("topHand").children;
-                        for (let i = 0; i < topHandElements.length; i++) {
-                            topHandElements[i].click();
+                        if (document.getElementById("bottomHand").children.length > 0) 
+                        {
+                            let topHandElements = document.getElementById("topHand").children;
+                            for (let i = 0; i < topHandElements.length; i++) 
+                            {
+                                topHandElements[i].click();
+                            }
                         }
+                        
                         document.getElementById("topTake").click();
                         document.getElementById("topPass").click();
                     }
