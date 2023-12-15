@@ -84,7 +84,7 @@
             
                     while (topHandElement.children.length < 6 && deckArray.length > 0) 
                     {
-                        let movingCardObject = deckArray.pop();
+                        let movingCardObject = deckArray.splice(Math.floor(Math.random() * deckArray.length), 1)[0];
                         topHandArray.push(movingCardObject);
 
                         let movingCardSuitEmoji;
@@ -143,7 +143,7 @@
             
                     while (bottomHandElement.children.length < 6 && deckArray.length > 0) 
                     {
-                        let movingCardObject = deckArray.pop();
+                        let movingCardObject = deckArray.splice(Math.floor(Math.random() * deckArray.length), 1)[0];
                         bottomHandArray.push(movingCardObject);
 
                         let movingCardSuitEmoji;
@@ -203,7 +203,7 @@
                     let bottomHandElement = document.getElementById("bottomHand");
                     while (bottomHandElement.children.length < 6 && deckArray.length > 0) 
                     {
-                        let movingCardObject = deckArray.pop();
+                        let movingCardObject = deckArray.splice(Math.floor(Math.random() * deckArray.length), 1)[0];
                         bottomHandArray.push(movingCardObject);
 
                         let movingCardSuitEmoji;
@@ -260,7 +260,7 @@
                     let topHandElement = document.getElementById("topHand");
                     while (topHandElement.children.length < 6 && deckArray.length > 0) 
                     {
-                        let movingCardObject = deckArray.pop();
+                        let movingCardObject = deckArray.splice(Math.floor(Math.random() * deckArray.length), 1)[0];
                         topHandArray.push(movingCardObject);
 
                         let movingCardSuitEmoji;
