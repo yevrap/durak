@@ -13,10 +13,20 @@
                 cursor: pointer;
             }
 
+            #topTake, #topPass {
+                background: transparent;
+                border: none !important;
+                font-size:0;
+            }
+
             .text-center {
                 text-align: center;
-            
-            
+            }
+
+            #info {
+                display: flex;
+                justify-content: space-between;
+                padding: 50px 200px;
             }
         </style>
 
@@ -33,41 +43,41 @@
 
             const deckArray = [
                 new Card(6, 1),
-                new Card(8, 3),
-                new Card(13, 1),
-                new Card(10, 2),
-                new Card(12, 3),
-                new Card(8, 2),
+                new Card(6, 2),
+                new Card(6, 3),
+                new Card(6, 4),
+                new Card(7, 1),
+                new Card(7, 2),
                 new Card(7, 3),
-                new Card(12, 4),
-                new Card(13, 3),
+                new Card(7, 4),
+                new Card(8, 1),
+                new Card(8, 2),
+                new Card(8, 3),
                 new Card(8, 4),
                 new Card(9, 1),
-                new Card(8, 1),
-                new Card(7, 1),
-                new Card(11, 4),
-                new Card(14, 3),
-                new Card(14, 2),
+                new Card(9, 2),
+                new Card(9, 3),
+                new Card(9, 4),
+                new Card(10, 1),
+                new Card(10, 2),
+                new Card(10, 3),
+                new Card(10, 4),
+                new Card(11, 1),
                 new Card(11, 2),
                 new Card(11, 3),
-                new Card(6, 4),
-                new Card(6, 2),
-                new Card(10, 1),
-                new Card(9, 4),
-                new Card(6, 3),
-                new Card(14, 1),
-                new Card(7, 4),
-                new Card(7, 2),
+                new Card(11, 4),
                 new Card(12, 1),
-                new Card(10, 3),
-                new Card(13, 2),
-                new Card(9, 3),
-                new Card(13, 4),
-                new Card(10, 4),
-                new Card(14, 4), 
-                new Card(11, 1),
                 new Card(12, 2),
-                new Card(9, 2),
+                new Card(12, 3),
+                new Card(12, 4),
+                new Card(13, 1),
+                new Card(13, 2),
+                new Card(13, 3),
+                new Card(13, 4),
+                new Card(14, 1),
+                new Card(14, 2),
+                new Card(14, 3),
+                new Card(14, 4), 
             ];
             const topHandArray = [];
             const bottomHandArray = [];
@@ -101,7 +111,7 @@
                                 suitEmoji = String.fromCodePoint(0x2764)
                                 break;
                         }
-                    document.getElementById("specialSuit").textContent = "Special Suit: " + suitEmoji;
+                    document.getElementById("specialSuit").innerText = "Special Suit: " + suitEmoji;
                 }
                 if (first.classList.contains("top")) 
                 {
@@ -154,7 +164,7 @@
                     
                         let newCardElement = document.createElement("BUTTON");
                         newCardElement.type="button";
-                        newCardElement.textContent = " - ";
+                        newCardElement.innerText = " - ";
                         newCardElement.id = movingCardObject.id;
                         newCardElement.setAttribute("value", movingCardObject.value);
                         newCardElement.setAttribute("suit", movingCardObject.suit);
@@ -213,7 +223,7 @@
 
                         let newCardElement = document.createElement("BUTTON");
                         newCardElement.type = "button";
-                        newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                        newCardElement.innerText = movingCardDisplay + " - " + movingCardSuitEmoji;
                         newCardElement.id=movingCardObject.id;
                         newCardElement.setAttribute("value", movingCardObject.value);
                         newCardElement.setAttribute("suit", movingCardObject.suit);
@@ -273,7 +283,7 @@
 
                         let newCardElement = document.createElement("BUTTON");
                         newCardElement.type = "button";
-                        newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                        newCardElement.innerText = movingCardDisplay + " - " + movingCardSuitEmoji;
                         newCardElement.id=movingCardObject.id;
                         newCardElement.setAttribute("value", movingCardObject.value);
                         newCardElement.setAttribute("suit", movingCardObject.suit);
@@ -330,7 +340,7 @@
                     
                         let newCardElement = document.createElement("BUTTON");
                         newCardElement.type="button";
-                        newCardElement.textContent = " - ";
+                        newCardElement.innerText = " - ";
                         newCardElement.id = movingCardObject.id;
                         newCardElement.setAttribute("value", movingCardObject.value);
                         newCardElement.setAttribute("suit", movingCardObject.suit);
@@ -344,7 +354,9 @@
                 if (document.contains(document.getElementById("bottomDraw"))) 
                 {
                     document.getElementById("bottomDraw").remove();
-                }      
+                } 
+                
+                document.getElementById("deckSize").innerText = "Deck Size: " + deckArray.length;
             }
 
             function play(id) {
@@ -466,7 +478,7 @@
 
                     let cardMovingToField = document.createElement("BUTTON");
                     cardMovingToField.type = "button";
-                    cardMovingToField.textContent = clickedCardDisplay + " - " + clickedCardSuitEmoji;
+                    cardMovingToField.innerText = clickedCardDisplay + " - " + clickedCardSuitEmoji;
                     cardMovingToField.id = clickedCardElement.id;
                     cardMovingToField.setAttribute("value", clickedCardElement.value);
                     cardMovingToField.setAttribute("suit", clickedCardElement.getAttribute("suit"));
@@ -570,7 +582,7 @@
 
                             let newCardElement = document.createElement("BUTTON");
                             newCardElement.type = "button";
-                            newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                            newCardElement.innerText = movingCardDisplay + " - " + movingCardSuitEmoji;
                             newCardElement.id = movingCardObject.id;
                             newCardElement.classList.add("bottom", "hand");
                             newCardElement.setAttribute("value", movingCardObject.value);
@@ -630,7 +642,7 @@
 
                             let newCardElement = document.createElement("BUTTON");
                             newCardElement.type = "button";
-                            newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                            newCardElement.innerText = movingCardDisplay + " - " + movingCardSuitEmoji;
                             newCardElement.id = movingCardObject.id;
                             newCardElement.classList.add("bottom", "hand");
                             newCardElement.setAttribute("value", movingCardObject.value);
@@ -699,7 +711,7 @@
 
                             let newCardElement = document.createElement("BUTTON");
                             newCardElement.type = "button";
-                            newCardElement.textContent = " - ";
+                            newCardElement.innerText = " - ";
                             newCardElement.id = movingCardObject.id;
                             newCardElement.classList.add("top", "hand");
                             newCardElement.setAttribute("value", movingCardObject.value);
@@ -759,7 +771,7 @@
 
                             let newCardElement = document.createElement("BUTTON");
                             newCardElement.type = "button";
-                            newCardElement.textContent = " - ";
+                            newCardElement.innerText = " - ";
                             newCardElement.id = movingCardObject.id;
                             newCardElement.classList.add("top", "hand");
                             newCardElement.setAttribute("value", movingCardObject.value);
@@ -827,6 +839,7 @@
                             document.getElementById("topHand").children[0].click();
                         }
                     }
+                    document.getElementById("discardSize").innerText = "Discard Size: " + discardArray.length;
                     draw(passButtonElement);
                 }
             }
@@ -834,9 +847,20 @@
     </head>
 
     <body>
-        <h2 id="attacker" value="bottom">Attacker: Bottom</h2>
-        <h2 id="priority" value="bottom">Priority: Bottom</h2>
-        <h2 id="specialSuit" value="">Special Suit: </h2>
+        <div id="info">
+            <div class="left">
+                <h2 id="attacker" value="bottom">Attacker: Bottom</h2>
+                <h2 id="priority" value="bottom">Priority: Bottom</h2>
+            </div>
+            <div class="right">
+                <h2 id="specialSuit" value="">Special Suit: </h2>
+                <h2 id="deckSize" value="">Deck Size: </h2>
+                <h2 id="discardSize" value="">Discard Size: </h2>
+            </div>
+        </div>
+        
+        
+        
         <div class="text-center">
             <br>
 
