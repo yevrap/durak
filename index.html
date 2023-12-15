@@ -129,7 +129,7 @@
                     
                         let newCardElement = document.createElement("BUTTON");
                         newCardElement.type="button";
-                        newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                        newCardElement.textContent = " - ";
                         newCardElement.id = movingCardObject.id;
                         newCardElement.setAttribute("value", movingCardObject.value);
                         newCardElement.setAttribute("suit", movingCardObject.suit);
@@ -305,7 +305,7 @@
                     
                         let newCardElement = document.createElement("BUTTON");
                         newCardElement.type="button";
-                        newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                        newCardElement.textContent = " - ";
                         newCardElement.id = movingCardObject.id;
                         newCardElement.setAttribute("value", movingCardObject.value);
                         newCardElement.setAttribute("suit", movingCardObject.suit);
@@ -493,8 +493,10 @@
                 var whosPriority = document.getElementById("priority").getAttribute("value");
                 if (!takeButtonElement.classList.contains(whosAttacker) && takeButtonElement.classList.contains(whosPriority)) {
                     // pop cards from field and put them in defenders hand, change priority
-                    if (takeButtonElement.classList.contains("bottom")) {
-                        while (topBoardArray.length > 0) {
+                    if (takeButtonElement.classList.contains("bottom")) 
+                    {
+                        while (topBoardArray.length > 0) 
+                        {
                             let movingCardObject = topBoardArray.pop();
                             let movingCardSuitId = parseInt(movingCardObject.suit);
                             let movingCardValue = parseInt(movingCardObject.value);
@@ -621,7 +623,8 @@
                             document.getElementById("topHand").children[1].click();
                         }
 
-                    } else if (takeButtonElement.classList.contains("top")) {
+                    } 
+                    else if (takeButtonElement.classList.contains("top")) {
                         while (topBoardArray.length > 0) {
                             let movingCardObject = topBoardArray.pop();
                             let movingCardSuitId = parseInt(movingCardObject.suit);
@@ -672,7 +675,7 @@
 
                             let newCardElement = document.createElement("BUTTON");
                             newCardElement.type = "button";
-                            newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                            newCardElement.textContent = " - ";
                             newCardElement.id = movingCardObject.id;
                             newCardElement.classList.add("top", "hand");
                             newCardElement.setAttribute("value", movingCardObject.value);
@@ -732,7 +735,7 @@
 
                             let newCardElement = document.createElement("BUTTON");
                             newCardElement.type = "button";
-                            newCardElement.textContent = movingCardDisplay + " - " + movingCardSuitEmoji;
+                            newCardElement.textContent = " - ";
                             newCardElement.id = movingCardObject.id;
                             newCardElement.classList.add("top", "hand");
                             newCardElement.setAttribute("value", movingCardObject.value);
