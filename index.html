@@ -78,7 +78,8 @@
 
             function draw(first)
             {
-                if (document.getElementById("specialSuit").getAttribute("value") === "") {
+                if (document.getElementById("specialSuit").getAttribute("value") === "") 
+                {
                     document.getElementById("specialSuit").setAttribute("value", specialSuit);
                     let suitEmoji;
                     switch (specialSuit) 
@@ -643,7 +644,7 @@
                         document.getElementById("priority").innerText = "Priority: Top";
 
                         if (document.getElementById("bottomHand").children.length > 0) {
-                            document.getElementById("topHand").children[1].click();
+                            document.getElementById("topHand").children[0].click();
                         }
 
                     } 
@@ -823,7 +824,7 @@
                         document.getElementById("attacker").innerText="Attacker: Top";
 
                         if (document.getElementById("bottomHand").children.length > 0) {
-                            document.getElementById("topHand").children[1].click();
+                            document.getElementById("topHand").children[0].click();
                         }
                     }
                     draw(passButtonElement);
